@@ -518,18 +518,3 @@ def delinearize(img: fIMGCompatible
                 ) -> npt.NDArray[np.uint8]:
     """Alias for fimg_to_iimg(sRGB_to_linear(img))"""
     return (fimg_to_iimg(linear_to_sRGB(img)))
-
-
-def dull(img: iIMGCompatible
-         ) -> npt.NDArray[np.uint8]:
-    """Dull an image by pulling all of its sRGB values closer to its
-    average grey.
-
-    NOT IN RELEASE VERSION YET, AND SHOULD NOT BE UNTIL IT USES THE
-        LINEAR CONVERSION FUNCTIONS"""
-    IMG = _iimgify(img).astype(np.uint16)
-    grey = _iimgify(np.stack((np.mean(IMG, axis=2),)*4, axis=-1)
-                    * np.ones(IMG.shape)).astype(np.uint16)
-    out = (grey + IMG)//2
-    out[:, :, -1] = IMG[:, :, -1]
-    return (np.array(out, dtype=np.uint8))
